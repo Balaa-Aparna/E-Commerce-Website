@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 import java.lang.reflect.Method;
 
 public class LoginServletTest {
-    
+
     private LoginServlet loginServlet;
     private HttpServletRequest request;
     private HttpServletResponse response;
@@ -51,20 +51,22 @@ public class LoginServletTest {
         // Mock UserDao behavior
         UserDao userDao = mock(UserDao.class);
         User user = new User(); // Mock a valid user object
-        user.setUserEmail("test786@gmail.com");  // Mock the email
-        user.setUserPassword("abc123");  // Mock the password
+        user.setUserEmail("test786@gmail.com"); // Mock the email
+        user.setUserPassword("abc123"); // Mock the password
         when(userDao.getUserByEmailPassword("test786@gmail.com", "abc123")).thenReturn(user);
 
         // reflection to call the package-private method
-        Method doPostMethod = LoginServlet.class.getDeclaredMethod("doPost", HttpServletRequest.class, HttpServletResponse.class);
+        Method doPostMethod = LoginServlet.class.getDeclaredMethod("doPost", HttpServletRequest.class,
+                HttpServletResponse.class);
         doPostMethod.setAccessible(true); // Make the method accessible
         doPostMethod.invoke(loginServlet, request, response); // Invoke the method
 
         // ArgumentCaptor to capture the session attribute
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-        verify(session).setAttribute(eq("activeUser"), userCaptor.capture()); // Capture the user object passed to setAttribute
+        verify(session).setAttribute(eq("activeUser"), userCaptor.capture()); // Capture the user object passed to
+                                                                              // setAttribute
 
-        //  compare the fields (email and password) Manually
+        // compare the fields (email and password) Manually
         User capturedUser = userCaptor.getValue();
         assertNotNull(capturedUser);
         assertEquals(user.getUserEmail(), capturedUser.getUserEmail()); // Compare the email
@@ -86,12 +88,32 @@ public class LoginServletTest {
         when(userDao.getUserByEmailPassword("test786@example.com", "wrongpassword")).thenReturn(null);
 
         // reflection to call the package-private method
-        Method doPostMethod = LoginServlet.class.getDeclaredMethod("doPost", HttpServletRequest.class, HttpServletResponse.class);
+        Method doPostMethod = LoginServlet.class.getDeclaredMethod("doPost", HttpServletRequest.class,
+                HttpServletResponse.class);
         doPostMethod.setAccessible(true); // Make the method accessible
         doPostMethod.invoke(loginServlet, request, response); // Invoke the method
 
-        //   an error message was set in the session Verification
+        // an error message was set in the session Verification
         verify(session).setAttribute(eq("message"), any());
+        verify(response).sendRedirect("login.jsp");
+    }
+
+    @Test
+    public void testWeakPassword() throws Exception {
+        // Mock input parameters for weak password (short password)
+        when(request.getParameter("login")).thenReturn("user");
+        when(request.getParameter("user_email")).thenReturn("test786@gmail.com");
+        when(request.getParameter("user_password")).thenReturn("123"); // Weak password
+        when(request.getSession()).thenReturn(session);
+
+        // Use reflection to call the package-private doPost method
+        Method doPostMethod = LoginServlet.class.getDeclaredMethod("doPost", HttpServletRequest.class,
+                HttpServletResponse.class);
+        doPostMethod.setAccessible(true); // Make the method accessible
+        doPostMethod.invoke(loginServlet, request, response);
+        // Verify that an error message is set in the session
+        verify(session).setAttribute(eq("message"), any());
+        // Verify the redirect to the login page (login.jsp)
         verify(response).sendRedirect("login.jsp");
     }
 }
