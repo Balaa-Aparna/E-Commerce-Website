@@ -55,16 +55,16 @@ public class LoginServletTest {
         user.setUserPassword("abc123");  // Mock the password
         when(userDao.getUserByEmailPassword("test786@gmail.com", "abc123")).thenReturn(user);
 
-        // Use reflection to call the package-private method
+        // reflection to call the package-private method
         Method doPostMethod = LoginServlet.class.getDeclaredMethod("doPost", HttpServletRequest.class, HttpServletResponse.class);
         doPostMethod.setAccessible(true); // Make the method accessible
         doPostMethod.invoke(loginServlet, request, response); // Invoke the method
 
-        // Use ArgumentCaptor to capture the session attribute
+        // ArgumentCaptor to capture the session attribute
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         verify(session).setAttribute(eq("activeUser"), userCaptor.capture()); // Capture the user object passed to setAttribute
 
-        // Manually compare the fields (email and password)
+        //  compare the fields (email and password) Manually
         User capturedUser = userCaptor.getValue();
         assertNotNull(capturedUser);
         assertEquals(user.getUserEmail(), capturedUser.getUserEmail()); // Compare the email
@@ -85,12 +85,12 @@ public class LoginServletTest {
         UserDao userDao = mock(UserDao.class);
         when(userDao.getUserByEmailPassword("test786@example.com", "wrongpassword")).thenReturn(null);
 
-        // Use reflection to call the package-private method
+        // reflection to call the package-private method
         Method doPostMethod = LoginServlet.class.getDeclaredMethod("doPost", HttpServletRequest.class, HttpServletResponse.class);
         doPostMethod.setAccessible(true); // Make the method accessible
         doPostMethod.invoke(loginServlet, request, response); // Invoke the method
 
-        // Verify that an error message was set in the session
+        //   an error message was set in the session Verification
         verify(session).setAttribute(eq("message"), any());
         verify(response).sendRedirect("login.jsp");
     }
