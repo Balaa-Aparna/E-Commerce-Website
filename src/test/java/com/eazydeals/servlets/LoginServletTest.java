@@ -116,4 +116,25 @@ public class LoginServletTest {
         // Verify the redirect to the login page (login.jsp)
         verify(response).sendRedirect("login.jsp");
     }
+
+    @Test
+
+    public void testInvalidEmailFormat() throws Exception {
+        // Mock input parameters for invalid email format
+        when(request.getParameter("login")).thenReturn("user");
+        when(request.getParameter("user_email")).thenReturn("userexample.com"); // Missing '@' symbol
+        when(request.getParameter("user_password")).thenReturn("abc123");
+        when(request.getSession()).thenReturn(session);
+        
+        // Use reflection to call the package-private doPost method
+        Method doPostMethod = LoginServlet.class.getDeclaredMethod("doPost", HttpServletRequest.class, HttpServletResponse.class);
+        doPostMethod.setAccessible(true); // Make the method accessible
+        doPostMethod.invoke(loginServlet, request, response);
+
+        // Verify that an error message is set in the session
+        verify(session).setAttribute(eq("message"), any());
+        
+        // Verify the redirect to the login page (login.jsp)
+        verify(response).sendRedirect("login.jsp");
+    }
 }
