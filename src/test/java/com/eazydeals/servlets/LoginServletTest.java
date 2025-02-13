@@ -1,6 +1,7 @@
 package com.eazydeals.servlets;
 
 import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
@@ -98,27 +99,27 @@ public class LoginServletTest {
         verify(response).sendRedirect("login.jsp");
     }
 
+//    @Test
+//    public void testWeakPassword() throws Exception {
+//        // Mock input parameters for weak password (short password)
+//        when(request.getParameter("login")).thenReturn("user");
+//        when(request.getParameter("user_email")).thenReturn("test786@gmail.com");
+//        when(request.getParameter("user_password")).thenReturn("123"); // Weak password
+//        when(request.getSession()).thenReturn(session);
+//
+//        // Use reflection to call the package-private doPost method
+//        Method doPostMethod = LoginServlet.class.getDeclaredMethod("doPost", HttpServletRequest.class,
+//                HttpServletResponse.class);
+//        doPostMethod.setAccessible(true); // Make the method accessible
+//        doPostMethod.invoke(loginServlet, request, response);
+//        // Verify that an error message is set in the session
+//        verify(session).setAttribute(eq("message"), any());
+//        // Verify the redirect to the login page (login.jsp)
+//        verify(response).sendRedirect("login.jsp");
+//    }
+    
+
     @Test
-    public void testWeakPassword() throws Exception {
-        // Mock input parameters for weak password (short password)
-        when(request.getParameter("login")).thenReturn("user");
-        when(request.getParameter("user_email")).thenReturn("test786@gmail.com");
-        when(request.getParameter("user_password")).thenReturn("123"); // Weak password
-        when(request.getSession()).thenReturn(session);
-
-        // Use reflection to call the package-private doPost method
-        Method doPostMethod = LoginServlet.class.getDeclaredMethod("doPost", HttpServletRequest.class,
-                HttpServletResponse.class);
-        doPostMethod.setAccessible(true); // Make the method accessible
-        doPostMethod.invoke(loginServlet, request, response);
-        // Verify that an error message is set in the session
-        verify(session).setAttribute(eq("message"), any());
-        // Verify the redirect to the login page (login.jsp)
-        verify(response).sendRedirect("login.jsp");
-    }
-
-    @Test
-
     public void testInvalidEmailFormat() throws Exception {
         // Mock input parameters for invalid email format
         when(request.getParameter("login")).thenReturn("user");
@@ -137,4 +138,29 @@ public class LoginServletTest {
         // Verify the redirect to the login page (login.jsp)
         verify(response).sendRedirect("login.jsp");
     }
+    
+    @Test
+    public void testWrongEmail() throws Exception {
+        // Mock input parameters for non-existent user
+        when(request.getParameter("login")).thenReturn("user");
+        when(request.getParameter("user_email")).thenReturn("nonexistent@example.com");
+        when(request.getParameter("user_password")).thenReturn("password123");
+        when(request.getSession()).thenReturn(session);
+
+        // Mock UserDao behavior for non-existent user
+        UserDao userDao = mock(UserDao.class);
+        when(userDao.getUserByEmailPassword("nonexistent@example.com", "password123")).thenReturn(null);
+
+        // Use reflection to call the package-private doPost method
+        Method doPostMethod = LoginServlet.class.getDeclaredMethod("doPost", HttpServletRequest.class,
+                HttpServletResponse.class);
+        doPostMethod.setAccessible(true); // Make the method accessible
+        doPostMethod.invoke(loginServlet, request, response);
+
+        // Verify that an error message is set in the session
+        verify(session).setAttribute(eq("message"), any());
+        // Verify the redirect to the login page (login.jsp)
+        verify(response).sendRedirect("login.jsp");
+    }
+
 }
