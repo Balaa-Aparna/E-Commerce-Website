@@ -32,7 +32,7 @@ jobs:
 
       # Ensure that the libraries are available in the required folder
       # If libraries are in the referenced libraries or another directory, copy them into the GitHub Action workspace.
-      - name: Copy libraries (if necessary)
+      - name: Copy libraries ( necessary)
         run: |
           mkdir -p libs
           cp -r "EazyDeals/Referenced Libraries/*" libs/
@@ -49,19 +49,19 @@ jobs:
         run: |
           javac -cp "libs/*:src/main/java:src/test/java" -d out src/test/java/com/eazydeals/servlets/**/*.java
 
-      # Run tests  using the compiled classes
+      # Run tests (if any) using the compiled classes
       - name: Run tests
         run: |
           java -cp "out:libs/*:src/test/java" org.junit.runner.JUnitCore com.eazydeals.servlets.YourTestClassName
 
-      # Package your project into a .jar file
+      #  Package your project into a .jar file
       - name: Package Java application
         run: |
           jar cvf eazydeals.jar -C out .
 
-      # Upload artifact for deployment or further use
+      #  Upload artifact for deployment or further use
       - name: Upload Jar file as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3   # Updated to v3
         with:
           name: eazydeals-jar
           path: eazydeals.jar
