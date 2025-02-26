@@ -3,58 +3,48 @@ name: eazydeals-github-workflow
 on:
   push:
     branches:
-      - feature/github-actions  # Changed to  new test branch
+      - feature/github-actions
   pull_request:
     branches:
-      - feature/github-actions  # Changed to  new test branch
+      - feature/github-actions
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    # Checkout the repository code
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
-    # Set up JDK 21
     - name: Set up JDK 21
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         java-version: '21'
-        distribution: 'adoptopenjdk'
+        distribution: 'temurin'
 
-    # Ensure that the libraries are available in the required folder
-    # If libraries are in the referenced libraries or another directory, copy them into the GitHub Action workspace.
-    # paths used for compilation
     - name: Copy libraries (if necessary)
       run: |
         mkdir -p libs
         cp -r "EazyDeals/Referenced Libraries/*" libs/
         cp -r "EazyDeals/Java Resources/Libraries/*" libs/
 
-    # Compile Java source code with external JARs in the classpath
     - name: Compile Java source files
       run: |
         mkdir -p out
         javac -cp "libs/*:src/main/java" -d out src/main/java/com/eazydeals/**/*.java
 
-    # Compile test Java source files
     - name: Compile Test Java files
       run: |
         javac -cp "libs/*:src/main/java:src/test/java" -d out src/test/java/com/eazydeals/servlets/**/*.java
 
-    # Run tests using the compiled classes
     - name: Run tests
       run: |
-        java -cp "out:libs/*:src/test/java" org.junit.runner.JUnitCore com.eazydeals.servlets.YourTestClassName
+        java -cp "out:libs/*:src/test/java" org.junit.runner.JUnitCore com.eazydeals.servlets.ChangePasswordServletTest
 
-    # Package your project into a .jar file
     - name: Package Java application
       run: |
         jar cvf eazydeals.jar -C out .
 
-    # Upload artifact for deployment or further use
     - name: Upload Jar file as artifact
       uses: actions/upload-artifact@v3
       with:
