@@ -22,11 +22,9 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
-    - name: Copy libraries (if necessary)
-      run: |
-        mkdir -p libs
-        cp -r "EazyDeals/Referenced Libraries/*" libs/
-        cp -r "EazyDeals/Java Resources/Libraries/*" libs/
+    - name: List contents of libs directory
+      run: ls -R libs
+      continue-on-error: true
 
     - name: Compile Java source files
       run: |
