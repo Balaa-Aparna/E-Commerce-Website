@@ -1,11 +1,12 @@
 name: eazydeals-github-workflow
+
 on:
   push:
     branches:
-      - master
+      - feature/github-actions  # Changed to  new test branch
   pull_request:
     branches:
-      - master
+      - feature/github-actions  # Changed to  new test branch
 
 jobs:
   build:
@@ -17,21 +18,15 @@ jobs:
       uses: actions/checkout@v2
 
     # Set up JDK 21
-      - name: Set up JDK 21
-        uses: actions/setup-java@v2
-        with:
-          java-version: '21'
-          distribution: 'adoptopenjdk'
-
-    # Install dependencies (installing JDK)
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y default-jdk
+    - name: Set up JDK 21
+      uses: actions/setup-java@v2
+      with:
+        java-version: '21'
+        distribution: 'adoptopenjdk'
 
     # Ensure that the libraries are available in the required folder
     # If libraries are in the referenced libraries or another directory, copy them into the GitHub Action workspace.
-    # You can use these paths for compilation
+    # paths used for compilation
     - name: Copy libraries (if necessary)
       run: |
         mkdir -p libs
@@ -49,19 +44,19 @@ jobs:
       run: |
         javac -cp "libs/*:src/main/java:src/test/java" -d out src/test/java/com/eazydeals/servlets/**/*.java
 
-    # Run tests (if any) using the compiled classes
+    # Run tests using the compiled classes
     - name: Run tests
       run: |
         java -cp "out:libs/*:src/test/java" org.junit.runner.JUnitCore com.eazydeals.servlets.YourTestClassName
 
-    # (Optional) Package your project into a .jar file
+    # Package your project into a .jar file
     - name: Package Java application
       run: |
         jar cvf eazydeals.jar -C out .
 
-    # (Optional) Upload artifact for deployment or further use
+    # Upload artifact for deployment or further use
     - name: Upload Jar file as artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: eazydeals-jar
         path: eazydeals.jar
