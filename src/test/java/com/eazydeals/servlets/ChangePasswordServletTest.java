@@ -1,6 +1,7 @@
 package com.eazydeals.servlets;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
@@ -33,6 +34,7 @@ import com.eazydeals.helper.MailMessenger;
 @ExtendWith(MockitoExtension.class)
 class ChangePasswordServletTest {
 
+	// mock objects for Http request and responses
     @Mock private HttpServletRequest request;
     @Mock private HttpServletResponse response;
     @Mock private HttpSession session;
