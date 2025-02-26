@@ -23,21 +23,21 @@ jobs:
         distribution: 'temurin'
 
     - name: List contents of libs directory
-      run: ls -R libs
+      run: ls -R EazyDeals/libs
       continue-on-error: true
 
     - name: Compile Java source files
       run: |
         mkdir -p out
-        javac -cp "libs/*:src/main/java" -d out src/main/java/com/eazydeals/**/*.java
+        javac -cp "EazyDeals/libs/*:EazyDeals/src/main/java" -d out EazyDeals/src/main/java/com/eazydeals/**/*.java
 
     - name: Compile Test Java files
       run: |
-        javac -cp "libs/*:src/main/java:src/test/java" -d out src/test/java/com/eazydeals/servlets/**/*.java
+        javac -cp "EazyDeals/libs/*:EazyDeals/src/main/java:EazyDeals/src/test/java:out" -d out EazyDeals/src/test/java/com/eazydeals/**/*.java
 
-    - name: Run tests
+    - name: Run all tests
       run: |
-        java -cp "out:libs/*:src/test/java" org.junit.runner.JUnitCore com.eazydeals.servlets.ChangePasswordServletTest
+        java -cp "out:EazyDeals/libs/*:EazyDeals/src/test/java" org.junit.runner.JUnitCore $(find EazyDeals/src/test/java -name "*Test.java" | sed 's/.*java\///' | sed 's/\.java//' | sed 's/\//./g')
 
     - name: Package Java application
       run: |
