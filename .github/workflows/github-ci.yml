@@ -46,7 +46,7 @@ jobs:
         jar cvf eazydeals.jar -C out .
 
     - name: Upload Jar file as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: eazydeals-jar
         path: eazydeals.jar
