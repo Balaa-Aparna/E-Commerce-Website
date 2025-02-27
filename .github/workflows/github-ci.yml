@@ -37,7 +37,7 @@ jobs:
 
     - name: Run all tests
       run: |
-        java -cp "out:libs/*:libs/JUnit5/*:src/test/java" org.junit.platform.console.ConsoleLauncher --scan-classpath
+        java -cp "out:libs/JUnit5/*:src/test/java" org.junit.platform.console.ConsoleLauncher --scan-classpath
 
     - name: Package Java application
       run: |
