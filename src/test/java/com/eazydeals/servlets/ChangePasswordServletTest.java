@@ -1,6 +1,6 @@
 package com.eazydeals.servlets;
 
-import static org.junit.jupiter.api.Assertions.*;
+
 
 import static org.mockito.Mockito.*;
 
@@ -10,8 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,7 +36,7 @@ class ChangePasswordServletTest {
     @Mock private HttpServletRequest request;
     @Mock private HttpServletResponse response;
     @Mock private HttpSession session;
-    @Mock private UserDao userDao;
+//    @Mock private UserDao userDao;
     @Mock private ConnectionProvider connectionProvider;
 
 
