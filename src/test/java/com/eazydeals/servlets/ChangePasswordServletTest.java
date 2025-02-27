@@ -37,7 +37,7 @@ class ChangePasswordServletTest {
     @Mock private HttpServletResponse response;
     @Mock private HttpSession session;
 //    @Mock private UserDao userDao;
-    @Mock private ConnectionProvider connectionProvider;
+//    @Mock private ConnectionProvider connectionProvider;
 
 
     private ChangePasswordServlet servlet;
