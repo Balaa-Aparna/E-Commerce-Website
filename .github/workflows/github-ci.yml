@@ -37,7 +37,7 @@ jobs:
 
     - name: Run all tests
       run: |
-        java -jar libs/JUnit5/standalone/junit-platform-console-standalone-1.9.2.jar --class-path "out:libs/*:libs/JUnit5/*:src/test/java" --scan-class-path --details verbose
+        java -jar libs/JUnit5/standalone/junit-platform-console-standalone-1.9.2.jar --class-path "out:libs/*:libs/JUnit5/*:src/test/java:/libs/*" --scan-class-path --details verbose
 
     - name: Package Java application
       run: |
