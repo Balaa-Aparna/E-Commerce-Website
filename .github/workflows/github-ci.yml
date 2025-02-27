@@ -1,50 +1,27 @@
-name: eazydeals-github-workflow
+name: Java CI
 
-on:
-  push:
-    branches:
-      - feature/github-actions
-  pull_request:
-    branches:
-      - feature/github-actions
+on: [push, pull_request]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
+    - uses: actions/checkout@v4
     - name: Set up JDK 21
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '21'
         distribution: 'temurin'
-
-    - name: List contents of libs directory
-      run: ls -R libs
-      continue-on-error: true
-
-    - name: Compile Java source files
+    
+    - name: Compile and Run Tests
       run: |
         mkdir -p out
-        javac -cp "libs/*:libs/JUnit5/*:src/main/java" -d out src/main/java/com/eazydeals/**/*.java
+        javac -cp "libs/*:libs/JUnit5/*:src/main/java:src/test/java" -d out src/main/java/**/*.java src/test/java/**/*.java
+        java -cp "out:libs/*:libs/JUnit5/*" org.junit.platform.console.ConsoleLauncher --scan-class-path --class-path out --details verbose
 
-    - name: Compile Test Java files
-      run: |
-        javac -cp "libs/*:libs/JUnit5/*:src/main/java:src/test/java:out" -d out src/test/java/com/eazydeals/**/*.java
-
-    - name: Run all tests
-      run: |
-        java -jar libs/JUnit5/standalone/junit-platform-console-standalone-1.9.2.jar --class-path "out:libs/*:libs/JUnit5/*:src/test/java:/libs/*" --scan-class-path --details verbose
-
-    - name: Package Java application
-      run: |
-        jar cvf eazydeals.jar -C out .
-
-    - name: Upload Jar file as artifact
-      uses: actions/upload-artifact@v4
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v4
+      if: success() || failure()
       with:
-        name: eazydeals-jar
-        path: eazydeals.jar
+        report_paths: '**/TEST-*.xml'
