@@ -22,8 +22,4 @@ jobs:
         java -XX:+EnableDynamicAgentLoading --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED -cp "$GITHUB_WORKSPACE/out:$GITHUB_WORKSPACE/libs/*:$GITHUB_WORKSPACE/libs/JUnit5/*" org.junit.platform.console.ConsoleLauncher --select-class com.eazydeals.servlets.LogoutServletTest --class-path $GITHUB_WORKSPACE/out --details verbose
         
         
-    - name: Publish Test Report
-      uses: mikepenz/action-junit-report@v4
-      if: always()
-      with:
-        report_paths: '**/TEST-*.xml'
+
