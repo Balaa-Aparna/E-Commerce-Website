@@ -14,7 +14,13 @@ jobs:
       with:
         java-version: '21'
         distribution: 'temurin'
-
+        
+    - name: Set environment variables for database
+      run: |
+        echo "DB_URL=${{ secrets.DB_URL }}" >> $GITHUB_ENV
+        echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+        
     - name: Compile
       run: |
         mkdir -p out
