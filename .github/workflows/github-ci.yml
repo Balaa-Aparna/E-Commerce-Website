@@ -29,4 +29,4 @@ jobs:
 
     - name: Run Tests
       run: |
-        java -XX:+EnableDynamicAgentLoading --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED -cp "$GITHUB_WORKSPACE/out:$GITHUB_WORKSPACE/libs/*:$GITHUB_WORKSPACE/libs/JUnit5/*:$GITHUB_WORKSPACE/libs/mockito-inline-4.0.0.jar" org.junit.platform.console.ConsoleLauncher --select-class com.eazydeals.servlets.LoginServletTest --class-path $GITHUB_WORKSPACE/out --details verbose
+        java -XX:+EnableDynamicAgentLoading --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED -cp "$GITHUB_WORKSPACE/out:$GITHUB_WORKSPACE/libs/*:$GITHUB_WORKSPACE/libs/JUnit5/*:$GITHUB_WORKSPACE/libs/mockito-inline-4.0.0.jar" org.junit.platform.console.ConsoleLauncher --select-class com.eazydeals.servlets.LogoutServletTest --class-path $GITHUB_WORKSPACE/out --details verbose
